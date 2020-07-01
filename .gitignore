@@ -1,0 +1,6 @@
+front/node_modules
+front/.env
+front/.next
+back/node_modules
+back/.env
+back/uploads
