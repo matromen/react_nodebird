@@ -26,7 +26,9 @@ const hashtagAPIRouter = require('./routes/hashtag');
 
 app.use(morgan('dev'));
 
-
+app.get('/', (req, res)=>{
+    res.send('정상 가동중');
+});
 app.use('/', express.static('uploads'));
 app.use(cors({
     // origin: 'http://localhost:3060',
