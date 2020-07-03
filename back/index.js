@@ -3,6 +3,8 @@ const path = require('path');
 const {sequelize} = require('./models');
 const morgan = require('morgan');
 const cors = require('cors');
+const hpp = require('hpp');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const passport = require('passport');
@@ -18,24 +20,35 @@ sequelize.sync();
 passportConfig(passport);
 
 
+if(prod){
+    app.use(hpp());
+    app.use(helmet());
+    app.use(morgan('combined'));
+    app.use(cors({
+        origin: 'http://15.165.190.8',
+        credentials: true                       //프론트 서버와 쿠키 공유를 위해
+    }));
+
+}else{
+    app.use(morgan('dev'));
+    app.use(cors({
+        origin: true,
+        credentials: true                       //프론트 서버와 쿠키 공유를 위해
+    }));
+}
+
 
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/posts');
 const hashtagAPIRouter = require('./routes/hashtag');
 
-app.use(morgan('dev'));
 
 app.get('/', (req, res)=>{
     res.send('정상 가동중');
 });
 app.use('/', express.static('uploads'));
-app.use(cors({
-    // origin: 'http://localhost:3060',
-    origin: 'http://15.165.190.8',
-    // origin: true,
-    credentials: true                       //프론트 서버와 쿠키 공유를 위해
-}));
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser(process.env.COOKIE_SECRET));   
