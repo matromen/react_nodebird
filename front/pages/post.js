@@ -17,13 +17,13 @@ const Post = ({id}) => {
                     {name: 'description', content: singlePost.content},
                     {property: 'og:title', content: `${singlePost.user.nickName}님의 게시글`},
                     {property: 'og:description', content: singlePost.content},
-                    {property: 'og:image', content: singlePost.images[0] && `http://localhost:3100/${singlePost.images[0].src}`},
-                    {property: 'og:url', content:`http://localhost:3000/post/${id}`}
+                    {property: 'og:image', content: singlePost.images[0] && singlePost.images[0].src},
+                    {property: 'og:url', content:`http://15.165.190.8/post/${id}`}
                 ]}
                 />
             <div>{singlePost.content}</div>
             <div>{singlePost.user.nickName}</div>
-            <div>{singlePost.images[0] && <img src={`http://localhost:3100:/${singlePost.images[0].src}`}/>}</div>
+            <div>{singlePost.images[0] && <img src={singlePost.images[0].src}/>}</div>
         </>
     )
 }
