@@ -9,21 +9,37 @@ const {isLoggedIn} = require('../middlewares/auth');
 
 AWS.config.update({
     region: 'ap-northeast-2',
-    accessKeyId: '',
-    secretAccessKey: ''
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 });
+
+
 const upload = multer({
-    storage: multer.diskStorage({
-        destination(req, file, cb){
-            cb(null, 'uploads');
-        },
-        filename(req, file, cb){
-            const ext = path.extname(file.originalname);
-            cb(null, path.basename(file.originalname, ext)+'_'+Date.now()+ext)
+    storage: multerS3({
+        s3: new AWS.S3(),
+        bucket: 'matromen-react-nodebird',
+        key(req, file, cb){
+            cb(null, `original/${+new Date()}${path.basename(file.originalname)}`)
         }
     }),
     limits: {fileSize: 20*1024*1024}
 });
+
+
+
+
+// const upload = multer({
+//     storage: multer.diskStorage({
+//         destination(req, file, cb){
+//             cb(null, 'uploads');
+//         },
+//         filename(req, file, cb){
+//             const ext = path.extname(file.originalname);
+//             cb(null, path.basename(file.originalname, ext)+'_'+Date.now()+ext)
+//         }
+//     }),
+//     limits: {fileSize: 20*1024*1024}
+// });
 
 
 
@@ -38,9 +54,12 @@ const upload = multer({
 //   path:
 //    'uploads\\1c554b76d1ca4a08bd3e6750aecd3337_1593728582799.jpg',
 //   size: 65925 }
+
+
 router.post('/images/', upload.array('images'), (req, res, next)=>{
     console.log(req.files.map(file => console.log(file)));
-    res.json(req.files.map(file=>file.filename));
+    // res.json(req.files.map(file=>file.filename));
+    res.json(req.files.map(file=>file.location));
 })
 
 router.post('/', upload.none(), async (req, res, next)=>{
