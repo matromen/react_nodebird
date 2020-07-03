@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const {sequelize, Post, Hashtag, User, Comment, Image} = require('../models/');
-const multer = require('multer');
 const path = require('path');
+const multer = require('multer');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
 const {isLoggedIn} = require('../middlewares/auth');
 
-
+AWS.config.update({
+    region: 'ap-northeast-2',
+    accessKeyId: '',
+    secretAccessKey: ''
+});
 const upload = multer({
     storage: multer.diskStorage({
         destination(req, file, cb){
@@ -19,8 +25,21 @@ const upload = multer({
     limits: {fileSize: 20*1024*1024}
 });
 
+
+
 // upload.single('images') : req.file 그외는  req.files
+    
+// { fieldname: 'images',
+//   originalname: '1c554b76d1ca4a08bd3e6750aecd3337.jpg',
+//   encoding: '7bit',
+//   mimetype: 'image/jpeg',
+//   destination: 'uploads',
+//   filename: '1c554b76d1ca4a08bd3e6750aecd3337_1593728582799.jpg',
+//   path:
+//    'uploads\\1c554b76d1ca4a08bd3e6750aecd3337_1593728582799.jpg',
+//   size: 65925 }
 router.post('/images/', upload.array('images'), (req, res, next)=>{
+    console.log(req.files.map(file => console.log(file)));
     res.json(req.files.map(file=>file.filename));
 })
 

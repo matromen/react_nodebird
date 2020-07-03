@@ -32,7 +32,7 @@ app.get('/', (req, res)=>{
 app.use('/', express.static('uploads'));
 app.use(cors({
     // origin: 'http://localhost:3060',
-    origin: 'http://3.12.214.128',
+    origin: 'http://15.165.190.8',
     // origin: true,
     credentials: true                       //프론트 서버와 쿠키 공유를 위해
 }));
