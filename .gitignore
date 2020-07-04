@@ -4,3 +4,5 @@ front/.next
 back/node_modules
 back/.env
 back/uploads
+matromen_nodebird.pem
+lambda/node_modules
